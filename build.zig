@@ -182,6 +182,8 @@ pub fn createSpirvCross(
             if (options.cpp) spirv_cross.root_module.addCMacro("SPIRV_CROSS_C_API_CPP", "1");
             if (options.reflect) spirv_cross.root_module.addCMacro("SPIRV_CROSS_C_API_REFLECT", "1");
         }
+
+        spirv_cross.installHeader(upstream.path("spirv_cross_c.h"), "spirv_cross_c.h");
     }
 
     return spirv_cross;
