@@ -4,8 +4,7 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const build_static = b.option(bool, "spv_cross_build_static", "Whether to build a static lib") orelse true;
-    const build_shared = b.option(bool, "spv_cross_build_shared", "Whether to build a shared lib") orelse true;
+    const build_shared = b.option(bool, "spv_cross_build_shared", "Whether to build a shared lib") orelse false;
 
     const glsl = b.option(bool, "spv_cross_glsl", "Build GLSL support into SPIRV-Cross") orelse true;
     const hlsl = b.option(bool, "spv_cross_hlsl", "Build HLSL support into SPIRV-Cross") orelse true;
@@ -28,15 +27,8 @@ pub fn build(b: *std.Build) !void {
         .pic = pic,
     };
 
-    if (build_static) {
-        const static = try createSpirvCross(b, false, target, optimize, options);
-        b.installArtifact(static);
-    }
-
-    if (build_shared) {
-        const shared = try createSpirvCross(b, true, target, optimize, options);
-        b.installArtifact(shared);
-    }
+    const lib = try createSpirvCross(b, build_shared, target, optimize, options);
+    b.installArtifact(lib);
 }
 
 pub const SpirvCrossOptions = struct {
@@ -52,7 +44,7 @@ pub const SpirvCrossOptions = struct {
 
 pub fn createSpirvCross(
     b: *std.Build,
-    comptime shared: bool,
+    shared: bool,
     target: std.Build.ResolvedTarget,
     optimize: std.builtin.OptimizeMode,
     options: SpirvCrossOptions,
@@ -81,18 +73,14 @@ pub fn createSpirvCross(
     const spirv_cross_version = "0.64.0";
     _ = spirv_cross_version; // autofix
 
-    const spirv_cross = if (shared)
-        b.addSharedLibrary(.{
-            .name = "spirv-cross-c-shared",
+    const spirv_cross = b.addLibrary(.{
+        .name = "spirv-cross-c",
+        .linkage = if (shared) .dynamic else .static,
+        .root_module = b.addModule("spirv-cross-c", .{
             .target = target,
             .optimize = optimize,
-        })
-    else
-        b.addStaticLibrary(.{
-            .name = "spirv-cross-c",
-            .target = target,
-            .optimize = optimize,
-        });
+        }),
+    });
 
     spirv_cross.root_module.pic = options.pic;
 

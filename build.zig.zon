@@ -1,5 +1,5 @@
 .{
-    .name = "SPIRV-Cross_zig",
+    .name = .spirv_cross,
     .version = "0.0.0",
     .dependencies = .{
         .@"SPIRV-Cross" = .{
@@ -12,4 +12,5 @@
         "build.zig",
         "build.zig.zon",
     },
+    .fingerprint = 0x7ea1d836455336f,
 }
