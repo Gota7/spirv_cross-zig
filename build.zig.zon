@@ -3,8 +3,8 @@
     .version = "0.0.0",
     .dependencies = .{
         .@"SPIRV-Cross" = .{
-            .url = "git+https://github.com/KhronosGroup/SPIRV-Cross#a0183472e012867077e09c7531693e30388752b2",
-            .hash = "12202e231626c14ae8be8847ff8b84edad52666abeb0d786031dd2cd0e49ccce8932",
+            .url = "git+https://github.com/KhronosGroup/SPIRV-Cross#072444287f4e139c178d6d8fe32e04a0d2c34e8b",
+            .hash = "N-V-__8AAAnhtQA4NO_fga9K4QmJsbjE0F3nlNTjv9fJ6u_E",
             .lazy = true,
         },
     },
